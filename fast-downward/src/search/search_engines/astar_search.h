@@ -31,7 +31,11 @@ struct AStarSearchNode {
     struct Compare {
         bool operator()(const AStarSearchNode *lhs,
                         const AStarSearchNode *rhs) const {
-            // insert your code here
+            if(lhs->g > rhs->g){
+                return true;
+            }else if(lhs->g == rhs->g && lhs->h > rhs->h){
+			return true;
+		   } return false;
         }
     };
 };
@@ -46,9 +50,13 @@ struct OpenList {
 
     void insert(AStarSearchNode *node) {
         // insert your code here
+        open_list.push(node);
     }
 
     AStarSearchNode *pop_min() {
+    AStarSearchNode *a = open_list.top();
+	open_list.pop();
+	return a;
         // insert your code here
     }
 
