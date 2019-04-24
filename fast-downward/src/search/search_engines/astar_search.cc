@@ -55,6 +55,9 @@ void AStarSearch::extract_solution(AStarSearchNode *node) {
         p.push_back(node->achiever);
         node = node->predecessor;
     }
+    int plan_cost = calculate_plan_cost(p);
+    cout << "Plan length: " << p.size() << " step(s)." << endl;
+    cout << "Plan cost: " << plan_cost << endl;
     std::reverse(p.begin(), p.end());
     SearchEngine::set_plan(p);
 }
@@ -101,7 +104,7 @@ void AStarSearch::search() {
     // insert your code here
     // open and distances are already created in the constructor
     cout << INFTY << endl;
-    if(INFTY > h(get_initial_state())){
+    if(h(get_initial_state()) < INFTY){
         open.insert(make_root_node());
     }
     //WITH REOPEN
@@ -117,7 +120,7 @@ void AStarSearch::search() {
             }
             vector<pair<const GlobalOperator *, GlobalState>> sucessors = get_successors(n->state);
             for(pair<const GlobalOperator *, GlobalState> sucessor: sucessors){
-                if(INFTY > h(sucessor.second)){
+                if(h(sucessor.second) < INFTY){
                     AStarSearchNode* n_line = make_node(n, sucessor.first, sucessor.second);
                     open.insert(n_line);
                 }
