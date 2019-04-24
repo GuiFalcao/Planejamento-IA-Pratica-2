@@ -100,26 +100,49 @@ void AStarSearch::search() {
 
     // insert your code here
     // open and distances are already created in the constructor
-    if(best_h > h(get_initial_state())){
+    cout << INFTY << endl;
+    if(INFTY > h(get_initial_state())){
         open.insert(make_root_node());
     }
+    //WITH REOPEN
 
     while(!open.empty()){
         AStarSearchNode* n = open.pop_min();
-        if(!distances.contains(n->state)){
+        if(!distances.contains(n->state) || n->g < distances[n->state]){
+            distances[n->state] = n->g;
             if(is_goal(n->state)){
                 extract_solution(n);
+                print_statistics();
                 exit(0);
             }
             vector<pair<const GlobalOperator *, GlobalState>> sucessors = get_successors(n->state);
             for(pair<const GlobalOperator *, GlobalState> sucessor: sucessors){
-                if(best_h > h(sucessor.second)){
+                if(INFTY > h(sucessor.second)){
                     AStarSearchNode* n_line = make_node(n, sucessor.first, sucessor.second);
                     open.insert(n_line);
                 }
             }
         }
     }
+
+    // WITHOUT REOPEN
+    //
+    // while(!open.empty()){
+    //     AStarSearchNode* n = open.pop_min();
+    //     if(!distances.contains(n->state)){
+    //         if(is_goal(n->state)){
+    //             extract_solution(n);
+    //             exit(0);
+    //         }
+    //         vector<pair<const GlobalOperator *, GlobalState>> sucessors = get_successors(n->state);
+    //         for(pair<const GlobalOperator *, GlobalState> sucessor: sucessors){
+    //             if(INFTY > h(sucessor.second)){
+    //                 AStarSearchNode* n_line = make_node(n, sucessor.first, sucessor.second);
+    //                 open.insert(n_line);
+    //             }
+    //         }
+    //     }
+    // }
 
     cout << "Completely explored search space -> no solution!" << endl;
     cout << "Actual search time: " << timer

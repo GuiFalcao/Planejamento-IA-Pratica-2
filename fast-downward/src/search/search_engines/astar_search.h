@@ -31,9 +31,9 @@ struct AStarSearchNode {
     struct Compare {
         bool operator()(const AStarSearchNode *lhs,
                         const AStarSearchNode *rhs) const {
-            if(lhs->g > rhs->g){
+            if((lhs->g + lhs->h) > (rhs->g + rhs->h)){
                 return true;
-            }else if(lhs->g == rhs->g && lhs->h > rhs->h){
+            }else if((lhs->g + lhs->h) == (rhs->g + rhs->h) && lhs->h > rhs->h){
 			return true;
 		   } return false;
         }
